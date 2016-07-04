@@ -1,4 +1,0 @@
-server = tcp://180.168.214.246:41213;tcp://180.168.214.247:41213;
-broker = 8070
-investor = lhb
-password = password

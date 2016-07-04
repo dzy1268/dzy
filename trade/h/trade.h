@@ -23,6 +23,12 @@ class TradeSpi : public CThostFtdcTraderSpi
 		//登录请求响应
 		void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 
+		//报单录入请求响应
+		void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
+
+		//报单通知
+		void OnRtnOrder(CThostFtdcOrderField *pOrder);
+
 		//登出请求响应
 		void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 

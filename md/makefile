@@ -1,11 +1,11 @@
 EXECUTABLE := md
 LIBDIR := ../lib
-LIBS := thostmduserapi
+LIBS := thostmduserapi hiredis pthread
 INCLUDES := h
 SRCDIR := cpp
 
 CC := g++
-CFLAGS :=
+CFLAGS := -ggdb
 CPPFLAGS := $(CFLAGS)
 CPPFLAGS += $(addprefix -I,$(INCLUDES))
 CPPFLAGS += -MMD

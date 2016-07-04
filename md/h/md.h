@@ -6,10 +6,23 @@
 #include "../../h/ThostFtdcMdApi.h"
 #include <string>
 #include <vector>
+#include <hiredis/hiredis.h>
+#include <cstdlib>
 
 using namespace std;
 
 extern vector<char*> vec;
+extern vector<string> vhq1;
+extern vector<string> vhq2;
+extern vector<string> *vhq;
+
+extern pthread_mutex_t mutex;
+
+struct args
+{
+	int insp;
+	vector<char*> vecp;
+};
 
 class MdSpi : public CThostFtdcMdSpi
 {
