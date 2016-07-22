@@ -1,6 +1,6 @@
 EXECUTABLE := trade
 LIBDIR := ../lib
-LIBS := thosttraderapi
+LIBS := thosttraderapi hiredis
 INCLUDES := h
 SRCDIR := cpp
 

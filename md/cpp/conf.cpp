@@ -8,7 +8,7 @@ void Conf(string &key, string file)
         conf.open(file.c_str());
         if (!conf)
 	{
-                cout << "no file" << endl;
+                cout << "no file: " << file <<  endl;
 	}
 	string em;
 	string str;

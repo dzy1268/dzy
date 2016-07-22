@@ -1,6 +1,6 @@
 EXECUTABLE := md
 LIBDIR := ../lib
-LIBS := thostmduserapi hiredis pthread
+LIBS := thostmduserapi hiredis pthread mysqlclient
 INCLUDES := h
 SRCDIR := cpp
 

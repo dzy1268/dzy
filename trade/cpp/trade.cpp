@@ -26,6 +26,9 @@ void TradeSpi::OnFrontConnected()
 	PASS = key;
 	strcpy(loginField->Password, key.c_str());
 	tdapi->ReqUserLogin(loginField, 0);
+	file_hy.open("../conf/hydm", ios::out);
+	file_hy.clear();
+	file_hy.close();
 }
 
 //登录请求响应
@@ -38,15 +41,18 @@ void TradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
 	cout << "最大报单引用:" << pRspUserLogin->MaxOrderRef << endl;
 	cout << "上期所时间：" << pRspUserLogin->SHFETime << endl;
 	cout << "交易日：" << tdapi->GetTradingDay() << endl;
+	
+	CThostFtdcQryInstrumentField *ord = new CThostFtdcQryInstrumentField();
+	tdapi->ReqQryInstrument(ord, 0);
 //	tradingDate = tdapi->GetTradingDay();//设置交易日期
 
-	CThostFtdcQryTradingAccountField *account = new CThostFtdcQryTradingAccountField();
+/*	CThostFtdcQryTradingAccountField *account = new CThostFtdcQryTradingAccountField();
 	strcpy(account->BrokerID, BROKER.c_str());
 	strcpy(account->InvestorID, USER_ID.c_str());
 	tdapi->ReqQryTradingAccount(account, 999);
-
+*/
 //发出报单录入请求
-        CThostFtdcInputOrderField ord;
+/*        CThostFtdcInputOrderField ord;
         memset(&ord, 0, sizeof(ord));
 
         strcpy(ord.BrokerID, "9999");
@@ -70,22 +76,23 @@ void TradeSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin, CThost
 	ord.IsAutoSuspend = 0;
 	tdapi->ReqOrderInsert(&ord, 1);
 	cout << "1" << endl;
+	*/
 }
 
 //报单录入应答
 void TradeSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 {
 	// 输出报单录入结果
-	cout << "2" << endl;
-	printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
+//	cout << "2" << endl;
+//	printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID, pRspInfo->ErrorMsg);
 }
 
 ///报单回报
 void TradeSpi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 {
-	cout << "3" << endl;
-	printf("OnRtnOrder:\n");
-	printf("OrderSysID=[%s]\n", pOrder->OrderSysID);
+//	cout << "3" << endl;
+//	printf("OnRtnOrder:\n");
+//	printf("OrderSysID=[%s]\n", pOrder->OrderSysID);
 }
 
 //登出请求响应
@@ -101,4 +108,13 @@ void TradeSpi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAcc
 		cout << "nRequestID: " << nRequestID << endl;
 		cout << "可用资金" << pTradingAccount->Available << endl;
 	}
+}
+
+//请求查询合约响应
+void TradeSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
+{
+	file_hy.open("../conf/hydm", ios::app);
+	file_hy << pInstrument->InstrumentID << " ";
+	file_hy.close();
+//	cout << pInstrument->InstrumentID << endl;
 }

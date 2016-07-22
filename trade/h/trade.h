@@ -7,6 +7,8 @@
 #include "../../h/ThostFtdcUserApiStruct.h"
 #include <string>
 #include <vector>
+#include "redis.h"
+#include <fstream>
 
 using namespace std;
 
@@ -34,6 +36,9 @@ class TradeSpi : public CThostFtdcTraderSpi
 
 		//查询资金帐户响应
 		void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
+
+		//请求查询合约响应
+		void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);
 	private:
 		string USER_ID;
 		string PASS;
@@ -41,6 +46,7 @@ class TradeSpi : public CThostFtdcTraderSpi
 		CThostFtdcTraderApi *tdapi;
 		CThostFtdcReqUserLoginField *loginField;
 		CThostFtdcReqAuthenticateField *authField;
+		fstream file_hy;
 };
 
 #endif

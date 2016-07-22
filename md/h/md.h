@@ -8,15 +8,21 @@
 #include <vector>
 #include <hiredis/hiredis.h>
 #include <cstdlib>
+#include "redis.h"
+#include <sys/time.h>
+#include <unistd.h>
+#include <stdio.h>
+#include "mysql.h"
 
 using namespace std;
 
 extern vector<char*> vec;
-extern vector<string> vhq1;
-extern vector<string> vhq2;
-extern vector<string> *vhq;
 
 extern pthread_mutex_t mutex;
+
+extern vector<Tick> vhq1;
+extern vector<Tick> vhq2;
+extern vector<Tick> *vhq;
 
 struct args
 {
