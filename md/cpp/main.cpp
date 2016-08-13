@@ -9,110 +9,68 @@
 
 static void* hq(void* arg)
 {
-	string sql;
-	int z = 0;
 	string now;
 	string settime1 = "15:50:00";
 	string settime2 = "16:00:00";
 	string settime3 = "03:00:00";
 	string settime4 = "08:40:00";
-	time_t timel;
-	ObjectRedis redis;
-	ObjectMysql mysql;
-	for(int i = 0; i < 65535; ++i)
+	time_t datetime;
+	ObjectMongo mongo;
+	mongo.Conn();
+	string db = "test";
+/*	for(int j = 0; j < 10000; ++j)
 	{
-		if(vhq1.size() > 18000000)
+		sleep(60);
+		if(vid == 1)
 		{
-			pthread_mutex_lock(&mutex);
-			vhq = &vhq2;
-			pthread_mutex_unlock(&mutex);
-			redis.Connect();
-			for (int j = 0; j < vhq1.size(); ++j)
+			vid = 2;
+			sleep(5);
+			for(int i = 0; i < vp1.size(); ++i)
 			{
-				redis.Insert(vhq1[j]);
+				mongo.Insert(db + "." + vp1[i].first, vp1[i].second);
+				vp1[i].second.clear();
+				vp1[i].second.reserve(28800);
 			}
-			redis.disConnect();
-			mysql.Connect();
-			for (int j = 0; j < vhq1.size(); ++j)
-			{
-				mysql.Insert(vhq1[j]);
-			}
-			mysql.disConnect();
-			vhq1.clear();
-			vector<Tick>().swap(vhq1);
-			vhq1.reserve(20000000);
 		}
-		if(vhq2.size() > 18000000)
+		if(vid == 2)
 		{
-			pthread_mutex_lock(&mutex);
-			vhq = &vhq1;
-			pthread_mutex_unlock(&mutex);
-			redis.Connect();
-			for (int j = 0; j < vhq2.size(); ++j)
+			vid = 1;
+			sleep(5);
+			for(int i = 0; i < vp2.size(); ++i)
 			{
-				redis.Insert(vhq2[j]);
+				mongo.Insert(db + "." + vp2[i].first, vp2[i].second);
+				vp2[i].second.clear();
+				vp2[i].second.reserve(28800);
 			}
-			redis.disConnect();
-			mysql.Connect();
-			for (int j = 0; j < vhq2.size(); ++j)
-			{
-				mysql.Insert(vhq2[j]);
-			}
-			mysql.disConnect();
-			vhq2.clear();
-			vector<Tick>().swap(vhq2);
-			vhq2.reserve(20000000);
 		}
-		z = vhq->size();
-		time(&timel);
-		now = ctime(&timel);
-		sleep(1);
-		if (z == vhq->size() && z != 0 &&((now.substr(11, 8) > settime1 && now.substr(11, 8) < settime2 ) || (now.substr(11, 8) > settime3 && now.substr(11, 8) < settime4)))
-		{
-			pthread_mutex_lock(&mutex);
-			vhq = &vhq1;
-			pthread_mutex_unlock(&mutex);
-			redis.Connect();
-			for (int j = 0; j < vhq2.size(); ++j)
-			{
-				redis.Insert(vhq2[j]);
-				mysql.Insert(vhq2[j]);
-			}
-			redis.disConnect();
-//			mysql.Connect();
-//			for (int j = 0; j < vhq2.size(); ++j)
-//			{
-//				mysql.Insert(vhq2[j]);
-//			}
-//			mysql.disConnect();
-			vhq2.clear();
-			vector<Tick>().swap(vhq2);
-			vhq2.reserve(20000000);
-
-			pthread_mutex_lock(&mutex);
-			vhq = &vhq2;
-			pthread_mutex_unlock(&mutex);
-			redis.Connect();
-			for (int j = 0; j < vhq1.size(); ++j)
-			{
-				redis.Insert(vhq1[j]);
-			}
-			redis.disConnect();
-//			mysql.Connect();
-//			for (int j = 0; j < vhq1.size(); ++j)
-//			{
-//				mysql.Insert(vhq1[j]);
-//			}
-//			mysql.disConnect();
-			vhq1.clear();
-			vector<Tick>().swap(vhq1);
-			vhq1.reserve(20000000);
-
-			i = 0;
-		}
-		cout << now << " vector : " << z << endl;
-
 	}
+	*/
+	for(int j = 0; j < 10000; ++j)
+	{
+		time(&datetime);
+		now = ctime(&datetime);
+		for(int i = 0; i < vp1.size(); ++i)
+		{
+			if(vp1[i].second.size() != 0 && ((now.substr(11, 8) > settime1 && now.substr(11, 8) < settime2 ) || (now.substr(11, 8) > settime3 && now.substr(11, 8) < settime4)))
+			{
+				mongo.Insert(db + "." + vp1[i].first, vp1[i].second);
+				vp1[i].second.clear();
+				vp1[i].second.reserve(28800);
+			}
+		}
+		for(int i = 0; i < vp2.size(); ++i)
+		{
+			if(vp2[i].second.size() != 0 && ((now.substr(11, 8) > settime1 && now.substr(11, 8) < settime2 ) || (now.substr(11, 8) > settime3 && now.substr(11, 8) < settime4)))
+			{
+				mongo.Insert(db + "." + vp2[i].first, vp2[i].second);
+				vp2[i].second.clear();
+				vp2[i].second.reserve(28800);
+			}
+		}
+		sleep(1);
+		j = 0;
+	}
+	
 }
 
 static void* th(void* arg)
@@ -139,10 +97,16 @@ static void* th(void* arg)
 
 int main(int argc, char* argv[])
 {
-//	vector<Tick> vr;
-	vhq1.reserve(20000000);
-	vhq2.reserve(20000000);
-	vhq = &vhq1;
+	vector<Tick>* vhq1 = new vector<Tick>[argc];
+	vector<Tick>* vhq2 = new vector<Tick>[argc];
+	for (int i = 0; i< (argc -1); ++i)
+	{
+		vp1.push_back(make_pair(argv[i + 1], vhq1[i]));
+		vhq1[i].reserve(28800);
+		vp2.push_back(make_pair(argv[i + 1], vhq2[i]));
+		vhq2[i].reserve(28800);
+	}
+	vid = 1;
 	struct args arg[NUM];
 
 	int n = (argc - 1) / NUM;

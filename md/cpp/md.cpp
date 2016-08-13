@@ -1,10 +1,11 @@
 #include "md.h"
 #include "conf.h"
 
+int vid;
 vector<char*> vec;
-vector<Tick> vhq1;
-vector<Tick> vhq2;
-vector<Tick> *vhq;
+vector<pair<string, vector<Tick> > > vp1;
+vector<pair<string, vector<Tick> > > vp2;
+
 pthread_mutex_t mutex;
 
 MdSpi::MdSpi(CThostFtdcMdApi *mdApi)
@@ -281,10 +282,31 @@ void MdSpi::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketDat
 	}
         tick.ssl5 = pDepthMarketData->AskVolume5;
 
-	pthread_mutex_lock(&mutex);
-	vhq->push_back(tick);
-	pthread_mutex_unlock(&mutex);
-
+	if (vid == 1)
+	{
+		for (int i = 0; i < vp1.size(); ++i)
+		{
+			if(tick.hydm == vp1[i].first)
+			{
+				pthread_mutex_lock(&mutex);
+				vp1[i].second.push_back(tick);
+				pthread_mutex_unlock(&mutex);
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < vp2.size(); ++i)
+		{
+			if(tick.hydm == vp2[i].first)
+			{
+				pthread_mutex_lock(&mutex);
+				vp2[i].second.push_back(tick);
+				pthread_mutex_unlock(&mutex);
+			}
+		}
+	}
+	
 	gettimeofday(&end, NULL);
 	if ((long)(end.tv_sec - begin.tv_sec) * 1000000 + end.tv_usec - begin.tv_usec > 50000)
 	{

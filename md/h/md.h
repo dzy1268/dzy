@@ -13,16 +13,19 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "mysql.h"
+#include "mongo.h"
 
 using namespace std;
 
+extern int vid;
 extern vector<char*> vec;
 
 extern pthread_mutex_t mutex;
 
-extern vector<Tick> vhq1;
-extern vector<Tick> vhq2;
-extern vector<Tick> *vhq;
+extern vector<Tick>* vhq1;
+extern vector<Tick>* vhq2;
+extern vector<pair<string, vector<Tick> > > vp1;
+extern vector<pair<string, vector<Tick> > > vp2;
 
 struct args
 {

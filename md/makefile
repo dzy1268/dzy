@@ -1,6 +1,6 @@
 EXECUTABLE := md
-LIBDIR := ../lib
-LIBS := thostmduserapi hiredis pthread mysqlclient
+LIBDIR := ../lib 
+LIBS := thostmduserapi hiredis pthread mysqlclient boost_regex boost_program_options boost_thread boost_filesystem mongoclient 
 INCLUDES := h
 SRCDIR := cpp
 
